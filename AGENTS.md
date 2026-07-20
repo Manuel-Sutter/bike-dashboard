@@ -13,9 +13,13 @@ decisions.
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript, single app — no separate backend
-  service for the MVP (see `PROJECT.md` for why FIT parsing isn't needed).
-- Supabase (Postgres + Auth + Storage).
-- Package manager: npm.
+  service for the MVP.
+- Supabase (Postgres + Auth + Storage). Schema in `supabase/schema.sql`.
+- `scripts/` — small standalone Python scripts for Garmin Connect sync
+  (`garmin_login_once.py` for the one-time local auth, `garmin_sync.py` run
+  by `.github/workflows/garmin-sync.yml`). Not a backend service, no web
+  framework — see `PROJECT.md` for why.
+- Package manager: npm (JS side), pip (scripts/ only).
 
 ## Rules
 

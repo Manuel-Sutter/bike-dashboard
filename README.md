@@ -1,3 +1,28 @@
+Adaptive cycling coach dashboard, built on Garmin ride data. See `PROJECT.md`
+for the vision and architecture, `AGENTS.md` for stack conventions.
+
+## Garmin sync setup (one-time)
+
+1. Create a Supabase project, then run `supabase/schema.sql` against it (SQL
+   editor in the Supabase dashboard).
+2. Set repo secrets so the sync workflow can reach Supabase:
+   ```bash
+   gh secret set SUPABASE_URL --repo Manuel-Sutter/bike-dashboard
+   gh secret set SUPABASE_SERVICE_ROLE_KEY --repo Manuel-Sutter/bike-dashboard
+   ```
+3. Install the sync script's dependencies locally and authenticate once:
+   ```bash
+   pip install -r scripts/requirements.txt
+   python scripts/garmin_login_once.py
+   ```
+   Follow the printed instructions to save the resulting session as the
+   `GARMIN_TOKENS_B64` secret.
+4. From then on, `.github/workflows/garmin-sync.yml` runs daily and can also
+   be triggered on demand (`gh workflow run garmin-sync.yml` or via the
+   Actions tab).
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

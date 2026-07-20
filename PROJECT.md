@@ -18,30 +18,47 @@ The LLM explains numbers, it does not invent them.
 
 ## Architecture decision (diverges from the original brainstorm)
 
-- **Single Next.js + TypeScript app.** Matches the day-job stack, one
-  language end to end, no separate service to deploy/monitor for a solo side
-  project.
+- **Data source: Garmin Connect (Edge 840), not Strava.** Strava gated
+  Standard Tier API access behind a paid subscription in June 2026; since the
+  ride data already originates on a Garmin device, Strava would just be a
+  costly middleman copy of it.
+- **Single Next.js + TypeScript app** for the product itself. Matches the
+  day-job stack, one language end to end, no separate service to
+  deploy/monitor for a solo side project.
 - **Supabase** (Postgres + Auth + Storage) for data and file storage.
-- **No Python/FIT-parsing service in the MVP.** Strava's Activity Streams API
-  (`GET /activities/{id}/streams`) already returns per-second time series
-  (time, watts, heartrate, cadence, altitude, latlng, velocity_smooth, temp)
-  as JSON — there's no FIT file to parse for Strava-sourced rides.
-- Revisit a parsing service only if/when raw FIT files are imported directly
-  from Garmin/Wahoo, bypassing Strava — and even then, try a JS FIT parser
-  (e.g. `fit-file-parser`) before reaching for Python, to keep one runtime.
+- **Garmin sync is a small, separate Python component, not a backend
+  service.** `python-garminconnect` (the actively-maintained unofficial
+  client) hits Garmin Connect's own internal web API, which returns
+  pre-parsed per-second time series (power, cadence, HR, altitude, ...) as
+  JSON — no FIT file parsing needed for data pulled this way.
+  - This library is an arms race against Garmin's bot defenses (it broke for
+    ~2 weeks in March 2026 before catching up) — acceptable for a scheduled
+    job you can notice and fix, not something to build product-critical
+    real-time flows on top of.
+  - One-time local login (`scripts/garmin_login_once.py`, handles MFA)
+    caches a session token; that cached token — not the raw password — is
+    stored as a GitHub Actions secret and reused for ~a year.
+  - `scripts/garmin_sync.py` runs in GitHub Actions: daily via `schedule`,
+    or on demand via `workflow_dispatch` (triggered from the app through
+    GitHub's API for a "sync now" button). Chosen over a Vercel Python
+    function because Vercel's Hobby-tier 10s timeout is risky for a live
+    login handshake; GitHub Actions has no such constraint.
+  - New-ride ingestion from the app's own UI (manual FIT upload) is a
+    fallback path, not the primary one — would need a JS FIT parser (e.g.
+    `fit-file-parser`) since manually-downloaded files aren't pre-parsed.
 - **Training engine** (FTP estimate, CTL/ATL/TSB, power-duration curve,
-  interval detection, knee load score) is a plain TypeScript lib, callable
-  from API routes and a scheduled sync job. Keep it decoupled from the LLM
+  interval detection, knee load score) is a plain TypeScript lib inside the
+  Next.js app, callable from API routes. Keep it decoupled from the LLM
   layer — it produces structured facts; the LLM only explains them.
-- **Sync strategy:** one-time full historical import via Strava API, then
-  Strava webhooks for new activities. Own the data and computed metrics
-  locally rather than re-fetching from Strava on every page load.
+- Workout generation triggers a sync in the background (non-blocking) rather
+  than gating on it — the recommendation uses whatever's already in
+  Supabase; the daily cron is what keeps that generally fresh.
 
 ## Phases
 
-1. Strava OAuth, one-time historical sync, webhook for new rides. Dashboard:
-   ride list, FTP estimate, CTL/ATL/TSB, power-duration curve, plain-language
-   AI ride summary.
+1. Garmin one-time historical import (locally run), then daily automated
+   sync via GitHub Actions. Dashboard: ride list, FTP estimate, CTL/ATL/TSB,
+   power-duration curve, plain-language AI ride summary.
 2. Workout generator: rule-based recommendation from training load +
    readiness inputs.
 3. Subjective tracking: knee, sleep, gym, RPE check-ins after each ride.
@@ -60,17 +77,17 @@ The LLM explains numbers, it does not invent them.
 
 ## Data model sketch (refine once building)
 
-- `strava_accounts` (tokens)
-- `activities` (raw summary from Strava)
-- `activity_streams` (time series per activity — likely Storage-backed
-  compressed JSON rather than one Postgres row per second)
-- `computed_metrics` (per-activity, output of the training engine)
-- `checkins` (post-ride subjective: knee, sleep, fatigue)
-- `training_state` (CTL/ATL/TSB rollups over time)
+- `activities` (built so far — see `supabase/schema.sql`): raw Garmin
+  summary + parsed detail streams as jsonb, keyed by `garmin_activity_id`.
+- `computed_metrics` (per-activity, output of the training engine) — not yet
+  built, add once the training engine exists.
+- `checkins` (post-ride subjective: knee, sleep, fatigue) — phase 3.
+- `training_state` (CTL/ATL/TSB rollups over time) — phase 1/2, once the
+  training engine exists.
 
 ## Explicitly deferred
 
-- Garmin integration — no official public API, revisit via a community
-  library later.
+- Strava as a data source — revisit only if Garmin sync proves too fragile
+  and paying for Strava's API becomes worth it.
 - Route-aware workout instructions ("ride to Döltschi, repeat this climb
   6x") — needs a segment/route database for regular loops. Phase 3+.
