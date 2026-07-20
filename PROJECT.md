@@ -18,10 +18,20 @@ The LLM explains numbers, it does not invent them.
 
 ## Architecture decision (diverges from the original brainstorm)
 
-- **Data source: Garmin Connect (Edge 840), not Strava.** Strava gated
-  Standard Tier API access behind a paid subscription in June 2026; since the
-  ride data already originates on a Garmin device, Strava would just be a
-  costly middleman copy of it.
+- **Data source: Garmin Connect (Edge 840 + a Garmin watch), not Strava.**
+  Strava gated Standard Tier API access behind a paid subscription in June
+  2026; since the ride data already originates on Garmin devices, Strava
+  would just be a costly middleman copy of it.
+  - The Edge 840 alone gives ride data, Cycling VO2max, and Training
+    Status/Load.
+  - The watch adds HRV Status, Body Battery, and Sleep - none of these are
+    available from an Edge-only setup (confirmed against Garmin's own docs
+    and forums), so they only work because a watch is also synced.
+  - Garmin's own daily "Training Readiness" score (0-100, blends HRV, sleep,
+    recovery time, and acute:chronic workload) is pulled too and combined
+    with our own power-based TSB for the readiness recommendation - see
+    `src/lib/training/readiness.ts`. Two independent signals agreeing is a
+    stronger basis for "take it easy today" than either alone.
 - **Single Next.js + TypeScript app** for the product itself. Matches the
   day-job stack, one language end to end, no separate service to
   deploy/monitor for a solo side project.
@@ -47,9 +57,12 @@ The LLM explains numbers, it does not invent them.
     fallback path, not the primary one — would need a JS FIT parser (e.g.
     `fit-file-parser`) since manually-downloaded files aren't pre-parsed.
 - **Training engine** (FTP estimate, CTL/ATL/TSB, power-duration curve,
-  interval detection, knee load score) is a plain TypeScript lib inside the
-  Next.js app, callable from API routes. Keep it decoupled from the LLM
-  layer — it produces structured facts; the LLM only explains them.
+  interval detection, knee load score, readiness recommendation) is a plain
+  TypeScript lib inside the Next.js app (`src/lib/training/`, unit-tested
+  with vitest), callable from API routes. Keep it decoupled from the LLM
+  layer — it produces structured facts (e.g. `{ recommendation: "easy",
+  signals: {...} }`); the LLM only explains them in plain language, it never
+  invents the recommendation itself.
 - Workout generation triggers a sync in the background (non-blocking) rather
   than gating on it — the recommendation uses whatever's already in
   Supabase; the daily cron is what keeps that generally fresh.
@@ -79,11 +92,19 @@ The LLM explains numbers, it does not invent them.
 
 - `activities` (built so far — see `supabase/schema.sql`): raw Garmin
   summary + parsed detail streams as jsonb, keyed by `garmin_activity_id`.
-- `computed_metrics` (per-activity, output of the training engine) — not yet
-  built, add once the training engine exists.
+- `daily_wellness` (built so far): one row per calendar day — Garmin's
+  training readiness score, HRV status, body battery, sleep, VO2max,
+  training status, plus the full raw response as jsonb. `vo2max_cycling` and
+  `training_status` are extracted best-effort since those two Garmin
+  endpoints have no published schema — first real sync will confirm or fix
+  the field paths in `scripts/garmin_sync.py`.
+- `computed_metrics` (per-activity, output of the training engine) — the
+  engine itself exists (`src/lib/training/`), this persisted table doesn't
+  yet; add once an API route calls the engine on sync.
 - `checkins` (post-ride subjective: knee, sleep, fatigue) — phase 3.
-- `training_state` (CTL/ATL/TSB rollups over time) — phase 1/2, once the
-  training engine exists.
+- `training_state` (CTL/ATL/TSB rollups over time) — same as
+  `computed_metrics`: the calculation exists, the persisted rollup table
+  doesn't yet.
 
 ## Explicitly deferred
 
