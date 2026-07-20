@@ -1,0 +1,42 @@
+.banner {
+  border-radius: var(--radius);
+  padding: 1.4rem 1.6rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rest {
+  background: color-mix(in srgb, var(--rest) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--rest) 45%, var(--border));
+}
+
+.easy {
+  background: color-mix(in srgb, var(--easy) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--easy) 45%, var(--border));
+}
+
+.moderate {
+  background: color-mix(in srgb, var(--moderate) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--moderate) 45%, var(--border));
+}
+
+.hard_ok {
+  background: color-mix(in srgb, var(--hard-ok) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--hard-ok) 45%, var(--border));
+}
+
+.headline {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
