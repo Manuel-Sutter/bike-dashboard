@@ -21,6 +21,19 @@ describe("computeReadiness", () => {
     expect(result.recommendation).toBe("easy");
   });
 
+  it("doesn't let recovery time alone override a good Garmin readiness score into rest", () => {
+    // Real bug: recoveryTime is itself one of the inputs Garmin's own score
+    // is built from, so if that score still came out "good" despite
+    // recovery time running, forcing "rest" anyway double-counts the same
+    // signal against Garmin's own conclusion.
+    const result = computeReadiness({
+      tsb: -38,
+      garminReadinessScore: 71,
+      recoveryTimeMinutes: 60,
+    });
+    expect(result.recommendation).toBe("easy");
+  });
+
   it("recommends hard_ok when fresh and Garmin doesn't disagree", () => {
     const result = computeReadiness({ tsb: 15, garminReadinessScore: 85 });
     expect(result.recommendation).toBe("hard_ok");

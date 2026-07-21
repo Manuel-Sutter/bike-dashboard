@@ -52,8 +52,13 @@ function categorizeGarminReadiness(
 // Two independent signals (our power-based TSB, Garmin's own sensor-based
 // readiness score) generally agree; this only escalates to "rest" when both
 // point the same way, or when Garmin's watch says recovery time is still
-// running on top of a fatigued TSB - a single signal alone just downgrades
-// to "easy" rather than overriding a workout entirely.
+// running on top of a fatigued TSB AND Garmin's own composite score isn't
+// already "good" - recoveryTime is itself one of the inputs Garmin's score
+// is built from, so if the score still came out "good" despite recovery
+// time running, Garmin's own algorithm already decided that's fine; letting
+// stillRecovering override that verdict was double-counting the same
+// signal against Garmin's own conclusion. A single signal alone just
+// downgrades to "easy" rather than overriding a workout entirely.
 export function computeReadiness({
   tsb,
   garminReadinessScore = null,
@@ -76,6 +81,7 @@ export function computeReadiness({
 
   if (
     tsbCategory === "fatigued" &&
+    garminReadinessCategory !== "good" &&
     (garminReadinessCategory === "low" || stillRecovering)
   ) {
     return { recommendation: "rest", signals };

@@ -18,6 +18,10 @@ import { WorkoutGenerator } from "@/components/dashboard/WorkoutGenerator";
 import { KneeCorrelationChart } from "@/components/dashboard/KneeCorrelationChart";
 import styles from "./page.module.css";
 
+// This shows today's live TSB/ATL/readiness - it must never be frozen as a
+// static snapshot from build time.
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const {
     isMock,

@@ -4,6 +4,10 @@ import { classifyRide, computeTSS, type RideAnalysis } from "@/lib/training";
 import { WORKOUT_TYPE_STYLE } from "@/components/dashboard/workoutTypeStyle";
 import styles from "./page.module.css";
 
+// Ride history changes with every sync - never freeze it as a build-time
+// static snapshot.
+export const dynamic = "force-dynamic";
+
 const HISTORY_DAYS = 90;
 
 function formatDuration(durationS: number | null): string {

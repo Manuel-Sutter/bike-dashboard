@@ -14,11 +14,14 @@ function explainRecommendation(
 ): string {
   switch (recommendation) {
     case "rest":
-      return (
-        "Both your TSB and Garmin's readiness score point to fatigue" +
-        (signals.stillRecovering ? ", and Garmin still has recovery time counting down" : "") +
-        " — today's the day to skip structured training."
-      );
+      if (signals.garminReadinessCategory === "low") {
+        return (
+          "Both your TSB and Garmin's readiness score point to fatigue" +
+          (signals.stillRecovering ? ", and Garmin still has recovery time counting down" : "") +
+          " — today's the day to skip structured training."
+        );
+      }
+      return "Your TSB points to fatigue, and Garmin still has recovery time counting down — today's the day to skip structured training.";
     case "easy":
       return signals.stillRecovering
         ? "Garmin still has recovery time counting down, so keep today light."
