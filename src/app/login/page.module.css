@@ -9,37 +9,40 @@
 
 .card {
   background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 2rem;
+  padding: 2.2rem;
   width: 100%;
   max-width: 320px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.1rem;
 }
 
 .title {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .input {
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-pill);
+  padding: 0.7rem 1.1rem;
   font-size: 1rem;
-  background: var(--background);
+  background: var(--surface-solid);
   color: var(--foreground);
 }
 
 .button {
   border: none;
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-pill);
+  padding: 0.7rem 1.1rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   background: var(--moderate);
   color: white;
   cursor: pointer;

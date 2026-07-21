@@ -34,11 +34,11 @@ export function KpiTile({
           <span
             className={styles.iconBadge}
             style={{
-              background: `color-mix(in srgb, ${accent} 18%, transparent)`,
+              background: `color-mix(in srgb, ${accent} 22%, transparent)`,
               color: accent,
             }}
           >
-            <Icon size={17} strokeWidth={2} />
+            <Icon size={18} strokeWidth={2.25} />
           </span>
         )}
         <span className={styles.label}>{label}</span>

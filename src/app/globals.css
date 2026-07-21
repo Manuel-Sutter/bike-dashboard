@@ -1,33 +1,48 @@
 :root {
-  --background: #f6f7fb;
-  --foreground: #14151a;
-  --surface: #ffffff;
-  --border: #e9eaf1;
-  --muted: #6b7280;
-  --shadow: 0 1px 2px rgba(20, 21, 26, 0.04), 0 8px 24px rgba(20, 21, 26, 0.05);
+  /* Dark, moody glass aesthetic - primary identity regardless of system
+     theme, since that's the reference this was modeled on. Light mode gets
+     a lighter but structurally-matching palette below, for anyone who
+     explicitly prefers it. */
+  --background: #14151a;
+  --foreground: #f4f4f2;
+  --surface: rgba(255, 255, 255, 0.055);
+  --surface-solid: #1b1c23;
+  --border: rgba(255, 255, 255, 0.1);
+  --muted: rgba(244, 244, 242, 0.58);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --glass-blur: blur(22px);
 
-  --radius: 16px;
-  --radius-sm: 10px;
+  --radius: 28px;
+  --radius-sm: 18px;
+  --radius-pill: 999px;
 
-  --rest: #ef4444;
-  --easy: #f59e0b;
-  --moderate: #3b82f6;
-  --hard-ok: #22c55e;
+  --rest: #ff6b6b;
+  --easy: #ffb020;
+  --moderate: #38bdf8;
+  --hard-ok: #34d399;
+
+  --glow-1: #d9e04d;
+  --glow-2: #ff8a3d;
+  --glow-3: #34d399;
+  --glow-opacity: 0.9;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0d0e12;
-    --foreground: #f1f2f5;
-    --surface: #17181f;
-    --border: #262832;
-    --muted: #9aa0ab;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+    --background: #f3f2ee;
+    --foreground: #1c1d1a;
+    --surface: rgba(255, 255, 255, 0.65);
+    --surface-solid: #ffffff;
+    --border: rgba(20, 20, 15, 0.08);
+    --muted: rgba(28, 29, 26, 0.55);
+    --shadow: 0 8px 32px rgba(20, 20, 15, 0.08);
 
-    --rest: #f87171;
-    --easy: #fbbf24;
-    --moderate: #60a5fa;
-    --hard-ok: #4ade80;
+    --rest: #e0453f;
+    --easy: #d97706;
+    --moderate: #2563eb;
+    --hard-ok: #16a34a;
+
+    --glow-opacity: 0.45;
   }
 }
 
@@ -50,6 +65,22 @@ body {
   font-family: var(--font-dm-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* Soft, blurred colorful blobs behind everything - the ambient "glow
+   through dark glass" look, without needing a unique glow per card. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 30rem at 10% 0%, color-mix(in srgb, var(--glow-1) 22%, transparent), transparent 60%),
+    radial-gradient(34rem 28rem at 90% 15%, color-mix(in srgb, var(--glow-2) 20%, transparent), transparent 60%),
+    radial-gradient(40rem 32rem at 50% 100%, color-mix(in srgb, var(--glow-3) 16%, transparent), transparent 60%);
+  opacity: var(--glow-opacity);
 }
 
 * {

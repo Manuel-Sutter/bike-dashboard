@@ -61,7 +61,7 @@ export function PmcChart({ history }: PmcChartProps) {
             <ReferenceLine y={0} stroke="var(--border)" />
             <Tooltip
               contentStyle={{
-                background: "var(--surface)",
+                background: "var(--surface-solid)",
                 border: "1px solid var(--border)",
                 borderRadius: "var(--radius-sm)",
                 fontSize: "0.8rem",

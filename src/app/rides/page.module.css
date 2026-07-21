@@ -16,13 +16,15 @@
 
 .backLink {
   font-size: 0.85rem;
+  font-weight: 600;
   color: var(--moderate);
   align-self: flex-start;
 }
 
 .title {
-  font-size: 1.6rem;
-  font-weight: 600;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
@@ -46,15 +48,22 @@
 
 .rideRow {
   background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 0.9rem 1.1rem;
+  padding: 1rem 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  transition: transform 0.15s ease;
+}
+
+.rideRow:hover {
+  transform: translateY(-2px);
 }
 
 .rideMain {
@@ -68,9 +77,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: var(--radius-sm);
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--radius-pill);
   flex-shrink: 0;
 }
 

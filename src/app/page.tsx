@@ -16,6 +16,7 @@ import { ReadinessBanner } from "@/components/dashboard/ReadinessBanner";
 import { PmcChart } from "@/components/dashboard/PmcChart";
 import { WorkoutGenerator } from "@/components/dashboard/WorkoutGenerator";
 import { KneeCorrelationChart } from "@/components/dashboard/KneeCorrelationChart";
+import { SyncNowButton } from "@/components/dashboard/SyncNowButton";
 import styles from "./page.module.css";
 
 // This shows today's live TSB/ATL/readiness - it must never be frozen as a
@@ -40,6 +41,7 @@ export default async function Home() {
       <div className={styles.header}>
         <h1 className={styles.title}>Today</h1>
         {isMock && <span className={styles.mockBadge}>Mock data — not yet synced</span>}
+        <SyncNowButton />
         <Link href="/rides" className={styles.navLink}>
           Ride history →
         </Link>

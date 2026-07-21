@@ -1,58 +1,60 @@
 .banner {
   border-radius: var(--radius);
-  padding: 1.4rem 1.6rem;
-  border: 1px solid var(--border);
+  padding: 1.6rem 1.75rem;
+  border: 1px solid transparent;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
 }
 
 .rest {
-  background: color-mix(in srgb, var(--rest) 16%, var(--surface));
-  border-color: color-mix(in srgb, var(--rest) 45%, var(--border));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--rest) 92%, #000 8%), color-mix(in srgb, var(--rest) 70%, #000 30%));
 }
 
 .easy {
-  background: color-mix(in srgb, var(--easy) 16%, var(--surface));
-  border-color: color-mix(in srgb, var(--easy) 45%, var(--border));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--easy) 92%, #000 8%), color-mix(in srgb, var(--easy) 70%, #000 30%));
 }
 
 .moderate {
-  background: color-mix(in srgb, var(--moderate) 16%, var(--surface));
-  border-color: color-mix(in srgb, var(--moderate) 45%, var(--border));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--moderate) 92%, #000 8%), color-mix(in srgb, var(--moderate) 70%, #000 30%));
 }
 
 .hard_ok {
-  background: color-mix(in srgb, var(--hard-ok) 16%, var(--surface));
-  border-color: color-mix(in srgb, var(--hard-ok) 45%, var(--border));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--hard-ok) 92%, #000 8%), color-mix(in srgb, var(--hard-ok) 70%, #000 30%));
 }
 
 .headline {
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .explanation {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   max-width: 60ch;
+  opacity: 0.92;
 }
 
 .signals {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem 1rem;
   font-size: 0.85rem;
-  color: var(--muted);
+  font-weight: 500;
+  opacity: 0.9;
 }
 
 .context {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem 1rem;
   font-size: 0.8rem;
-  color: var(--muted);
-  border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
-  padding-top: 0.5rem;
-  margin-top: 0.15rem;
+  opacity: 0.85;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: 0.6rem;
+  margin-top: 0.2rem;
 }
