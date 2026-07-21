@@ -93,3 +93,20 @@ export function getMockWellnessHistory(days = 14): MockWellnessDay[] {
 
   return result;
 }
+
+// Real gym sessions will come from the watch (strength_training activities,
+// see scripts/garmin_sync.py) once synced. Tue/Thu placeholder in the
+// meantime so the knee correlation chart has something to render.
+export function getMockGymDays(days = 30): { date: string; isGymDay: boolean }[] {
+  const today = new Date();
+  const result: { date: string; isGymDay: boolean }[] = [];
+
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dayOfWeek = d.getDay();
+    result.push({ date: d.toISOString().slice(0, 10), isGymDay: dayOfWeek === 2 || dayOfWeek === 4 });
+  }
+
+  return result;
+}

@@ -1,7 +1,11 @@
-// Tunable defaults, not physiological constants - adjust once real data
-// shows these don't match how recovery actually feels for this rider.
-const TSB_FRESH_THRESHOLD = 10;
-const TSB_FATIGUED_THRESHOLD = -20;
+// Coggan's own published TSB bands (via TrainingPeaks "Applying the Numbers"
+// and multiple corroborating coaching sources, checked 2026-07): racing/peak
+// readiness sits at TSB 0 to +25; normal in-training fatigue is -10 to -30;
+// below -30 is where fatigue outpaces recovery capacity (overtraining risk).
+// Sourced via direct web search, not the full adversarial verification
+// workflow - re-check against primary sources if this ever matters a lot.
+const TSB_FRESH_THRESHOLD = 0;
+const TSB_FATIGUED_THRESHOLD = -30;
 const GARMIN_READINESS_GOOD_THRESHOLD = 70;
 const GARMIN_READINESS_LOW_THRESHOLD = 40;
 

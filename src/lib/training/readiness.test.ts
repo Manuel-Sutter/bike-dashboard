@@ -3,13 +3,13 @@ import { computeReadiness } from "./readiness";
 
 describe("computeReadiness", () => {
   it("recommends rest when both signals agree the rider is fatigued", () => {
-    const result = computeReadiness({ tsb: -25, garminReadinessScore: 30 });
+    const result = computeReadiness({ tsb: -35, garminReadinessScore: 30 });
     expect(result.recommendation).toBe("rest");
   });
 
   it("recommends rest when tsb is fatigued and Garmin recovery time is still running", () => {
     const result = computeReadiness({
-      tsb: -25,
+      tsb: -35,
       garminReadinessScore: 60,
       recoveryTimeMinutes: 120,
     });
@@ -17,7 +17,7 @@ describe("computeReadiness", () => {
   });
 
   it("only downgrades to easy when just one signal is low", () => {
-    const result = computeReadiness({ tsb: -25, garminReadinessScore: 80 });
+    const result = computeReadiness({ tsb: -35, garminReadinessScore: 80 });
     expect(result.recommendation).toBe("easy");
   });
 
@@ -36,7 +36,7 @@ describe("computeReadiness", () => {
     expect(fresh.recommendation).toBe("hard_ok");
     expect(fresh.signals.garminReadinessCategory).toBe("unknown");
 
-    const fatigued = computeReadiness({ tsb: -25 });
+    const fatigued = computeReadiness({ tsb: -35 });
     expect(fatigued.recommendation).toBe("easy");
   });
 

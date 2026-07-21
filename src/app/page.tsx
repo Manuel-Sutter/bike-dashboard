@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Activity,
   BatteryMedium,
@@ -13,20 +14,41 @@ import { getDashboardData } from "@/lib/dashboard-data";
 import { KpiTile } from "@/components/dashboard/KpiTile";
 import { ReadinessBanner } from "@/components/dashboard/ReadinessBanner";
 import { PmcChart } from "@/components/dashboard/PmcChart";
+import { WorkoutGenerator } from "@/components/dashboard/WorkoutGenerator";
+import { KneeCorrelationChart } from "@/components/dashboard/KneeCorrelationChart";
 import styles from "./page.module.css";
 
 export default async function Home() {
-  const { isMock, ftp, latestPmc, pmcHistory, wellnessToday, readiness, trends } =
-    await getDashboardData();
+  const {
+    isMock,
+    ftp,
+    latestPmc,
+    pmcHistory,
+    wellnessToday,
+    readiness,
+    trends,
+    todayKneeStatus,
+    kneeCorrelation,
+  } = await getDashboardData();
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Today</h1>
         {isMock && <span className={styles.mockBadge}>Mock data — not yet synced</span>}
+        <Link href="/rides" className={styles.navLink}>
+          Ride history →
+        </Link>
       </div>
 
-      <ReadinessBanner {...readiness} />
+      <ReadinessBanner
+        {...readiness}
+        context={{
+          hrvStatus: wellnessToday.hrvStatus,
+          bodyBatteryLow: wellnessToday.bodyBatteryLow,
+          sleepScore: wellnessToday.sleepScore,
+        }}
+      />
 
       <div className={styles.kpiGrid}>
         <KpiTile
@@ -80,14 +102,22 @@ export default async function Home() {
         <KpiTile
           label="HRV status"
           value={wellnessToday.hrvStatus}
-          subLabel={`Recovery trend · ${wellnessToday.hrvWeeklyAvgMs}ms avg (Garmin watch)`}
+          subLabel={
+            wellnessToday.hrvWeeklyAvgMs !== null
+              ? `Recovery trend · ${wellnessToday.hrvWeeklyAvgMs}ms avg (Garmin watch)`
+              : "Recovery trend (Garmin watch)"
+          }
           icon={Waves}
           accent="#14b8a6"
           trend={trends.hrv}
         />
         <KpiTile
           label="Body battery"
-          value={`${wellnessToday.bodyBatteryLow}–${wellnessToday.bodyBatteryHigh}`}
+          value={
+            wellnessToday.bodyBatteryLow !== null && wellnessToday.bodyBatteryHigh !== null
+              ? `${wellnessToday.bodyBatteryLow}–${wellnessToday.bodyBatteryHigh}`
+              : null
+          }
           subLabel="Today's energy reserve range (Garmin watch)"
           icon={BatteryMedium}
           accent="#22c55e"
@@ -103,7 +133,21 @@ export default async function Home() {
         />
       </div>
 
+      <WorkoutGenerator
+        readiness={readiness}
+        ftp={ftp}
+        initialKneeStatus={todayKneeStatus}
+        recentDailyTss={pmcHistory.slice(-29, -1)}
+        context={{
+          hrvStatus: wellnessToday.hrvStatus,
+          bodyBatteryLow: wellnessToday.bodyBatteryLow,
+          sleepScore: wellnessToday.sleepScore,
+          vo2max: wellnessToday.vo2maxCycling,
+        }}
+      />
+
       <PmcChart history={pmcHistory} />
+      <KneeCorrelationChart data={kneeCorrelation} />
     </div>
   );
 }

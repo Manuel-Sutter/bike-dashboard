@@ -33,10 +33,26 @@
   font-weight: 600;
 }
 
+.explanation {
+  font-size: 0.9rem;
+  max-width: 60ch;
+}
+
 .signals {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  padding-top: 0.5rem;
+  margin-top: 0.15rem;
 }

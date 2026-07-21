@@ -33,13 +33,31 @@ export function PmcChart({ history }: PmcChartProps) {
 
   return (
     <div className={styles.card}>
-      <span className={styles.title}>Fitness / Fatigue / Form (90 days)</span>
+      <div className={styles.header}>
+        <div>
+          <span className={styles.title}>Fitness / Fatigue / Form (90 days)</span>
+          <span className={styles.subtitle}>
+            CTL = fitness (6-week load), ATL = fatigue (1-week load), TSB = CTL minus ATL — your form
+          </span>
+        </div>
+        <div className={styles.legend}>
+          <span className={styles.legendItem}>
+            <span className={styles.dot} style={{ background: COLORS.ctl }} /> CTL (fitness)
+          </span>
+          <span className={styles.legendItem}>
+            <span className={styles.dot} style={{ background: COLORS.atl }} /> ATL (fatigue)
+          </span>
+          <span className={styles.legendItem}>
+            <span className={styles.dot} style={{ background: COLORS.tsb }} /> TSB (form)
+          </span>
+        </div>
+      </div>
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -12 }}>
+          <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
             <XAxis dataKey="date" tick={false} axisLine={false} tickLine={false} />
-            <YAxis width={36} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis width={44} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
             <ReferenceLine y={0} stroke="var(--border)" />
             <Tooltip
               contentStyle={{

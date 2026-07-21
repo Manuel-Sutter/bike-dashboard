@@ -12,6 +12,13 @@ create table if not exists activities (
   avg_cadence double precision,
   summary jsonb not null,
   streams jsonb,
+  -- Compact one-value-per-second watts array, derived from streams at sync
+  -- time. streams itself can be 1MB+ per ride (mostly GPS trace we never
+  -- use) - querying it for every ride in a dashboard/rides-page window was
+  -- taking 5+ seconds and transferring ~30MB for just 39 rides. Everything
+  -- that needs power data (TSS, FTP estimate, ride classification) should
+  -- read this column, never streams.
+  power_series jsonb,
   synced_at timestamptz not null default now()
 );
 
@@ -48,3 +55,15 @@ create table if not exists daily_wellness (
 );
 
 create index if not exists daily_wellness_date_idx on daily_wellness (date desc);
+
+-- Manual daily check-in - the one signal Garmin can't provide. Kept to just
+-- knee status for now; expand later (fatigue/RPE) if that alone proves
+-- useful once there's a few weeks of real data.
+create table if not exists checkins (
+  id bigint generated always as identity primary key,
+  date date not null unique,
+  knee_status integer not null check (knee_status between 1 and 5),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists checkins_date_idx on checkins (date desc);
