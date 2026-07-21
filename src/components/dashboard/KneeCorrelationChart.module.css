@@ -55,7 +55,36 @@
 
 .chartWrap {
   width: 100%;
-  height: 220px;
+  height: 190px;
+}
+
+.stripCaption {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.stripWrap {
+  width: 100%;
+  height: 22px;
+  margin-top: 0.2rem;
+}
+
+.stripLegend {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.swatch {
+  width: 0.9rem;
+  height: 0.55rem;
+  border-radius: 3px;
+  display: inline-block;
 }
 
 .empty {
@@ -81,6 +110,6 @@
 
 @media (max-width: 640px) {
   .chartWrap {
-    height: 180px;
+    height: 160px;
   }
 }

@@ -8,6 +8,8 @@ import {
   type WorkoutContext,
   type WorkoutPlan,
 } from "@/lib/training";
+import { useKneeStatus } from "./KneeStatusContext";
+import { KNEE_LABELS } from "./kneeLabels";
 import { WORKOUT_TYPE_STYLE } from "./workoutTypeStyle";
 import styles from "./WorkoutGenerator.module.css";
 
@@ -16,34 +18,14 @@ const TIME_PRESETS = [30, 45, 60, 75, 90, 120];
 export interface WorkoutGeneratorProps {
   readiness: ReadinessResult;
   ftp: number | null;
-  initialKneeStatus: number | null;
   recentDailyTss: DailyTss[];
   context: WorkoutContext;
 }
 
-export function WorkoutGenerator({
-  readiness,
-  ftp,
-  initialKneeStatus,
-  recentDailyTss,
-  context,
-}: WorkoutGeneratorProps) {
-  const [kneeStatus, setKneeStatus] = useState(initialKneeStatus ?? 1);
-  const [kneeSaved, setKneeSaved] = useState(initialKneeStatus !== null);
+export function WorkoutGenerator({ readiness, ftp, recentDailyTss, context }: WorkoutGeneratorProps) {
+  const { kneeStatus } = useKneeStatus();
   const [availableMinutes, setAvailableMinutes] = useState<number | null>(null);
   const [plan, setPlan] = useState<WorkoutPlan | null>(null);
-
-  function handleKneeSelect(n: number) {
-    setKneeStatus(n);
-    setKneeSaved(false);
-    fetch("/api/checkins", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ kneeStatus: n }),
-    })
-      .then(() => setKneeSaved(true))
-      .catch(() => {});
-  }
 
   function handleGenerate() {
     if (availableMinutes === null) return;
@@ -57,23 +39,11 @@ export function WorkoutGenerator({
     <div className={styles.card}>
       <span className={styles.title}>Generate today&apos;s workout</span>
 
-      <div className={styles.row}>
-        <div className={styles.rowLabelLine}>
-          <span className={styles.rowLabel}>Knee today (1 = fine, 5 = sore)</span>
-          {kneeSaved && <span className={styles.saved}>Saved</span>}
-        </div>
-        <div className={styles.pillGroup}>
-          {[1, 2, 3, 4, 5].map((n) => (
-            <button
-              key={n}
-              type="button"
-              className={n === kneeStatus ? styles.pillActive : styles.pill}
-              onClick={() => handleKneeSelect(n)}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
+      <div className={styles.rowLabelLine}>
+        <span className={styles.rowLabel}>
+          Knee today: <strong>{KNEE_LABELS[kneeStatus]}</strong>
+        </span>
+        <span className={styles.rowLabel}>change above ↑</span>
       </div>
 
       <div className={styles.row}>

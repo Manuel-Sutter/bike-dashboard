@@ -35,11 +35,6 @@
   color: var(--muted);
 }
 
-.saved {
-  font-size: 0.75rem;
-  color: var(--hard-ok);
-}
-
 .pillGroup {
   display: flex;
   flex-wrap: wrap;
@@ -50,9 +45,10 @@
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--foreground);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0.45rem 1rem;
   font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   outline: none;
@@ -70,7 +66,7 @@
   border: 1px solid var(--moderate);
   background: var(--moderate);
   color: white;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0.45rem 1rem;
   font-size: 0.85rem;
   font-weight: 600;
@@ -145,7 +141,7 @@
   font-weight: 600;
   background: var(--surface-solid);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0.3rem 0.8rem;
 }
 

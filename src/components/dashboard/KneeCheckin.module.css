@@ -1,0 +1,72 @@
+.card {
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.rowLabelLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.saved {
+  font-size: 0.75rem;
+  color: var(--hard-ok);
+}
+
+.pillGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  outline: none;
+}
+
+.pill:hover {
+  border-color: color-mix(in srgb, var(--moderate) 50%, var(--border));
+}
+
+.pill:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--moderate) 35%, transparent);
+}
+
+.pillActive {
+  border: 1px solid var(--moderate);
+  background: var(--moderate);
+  color: white;
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.pillActive:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--moderate) 45%, transparent);
+}
